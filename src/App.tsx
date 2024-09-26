@@ -1,14 +1,13 @@
 import './App.css'
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import MainShell from "./screens/Home.tsx";
-import {ConfigProvider} from "antd";
-import {useEffect, useState} from "react";
-import {darkColors, primaryColor} from "../colors.ts";
+import { ConfigProvider } from "antd";
+import { useEffect, useState } from "react";
+import { darkColors, primaryColor } from "../colors.ts";
 
 function App() {
-
     const [isDarkMode] = useState<boolean>(false);
-
+    const [hasCameraAccess, setHasCameraAccess] = useState<boolean | null>(null); // Store camera permission state
 
     const lightTheme = {
         token: {
@@ -46,21 +45,29 @@ function App() {
         },
     };
 
+    // Function to request camera access once
+    const requestCameraAccess = async () => {
+        try {
+            await navigator.mediaDevices.getUserMedia({ video: true });
+            setHasCameraAccess(true); // Camera access granted
+        } catch (error) {
+            setHasCameraAccess(false); // Camera access denied or failed
+        }
+    };
+
+    // Request camera access on app load, but only once
     useEffect(() => {
-
-    }, []);
-
-    useEffect(() => {
-
+        requestCameraAccess();
     }, []);
 
     return (
         <ConfigProvider theme={isDarkMode ? darkTheme : lightTheme}>
-    <Routes>
-     <Route path={'/'} element={<MainShell/>}/>
-    </Routes>
+            <Routes>
+                {/* Pass the camera access status to the MainShell component */}
+                <Route path={'/'} element={<MainShell hasCameraAccess={hasCameraAccess} />} />
+            </Routes>
         </ConfigProvider>
-  )
+    )
 }
 
-export default App
+export default App;
