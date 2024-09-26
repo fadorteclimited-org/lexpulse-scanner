@@ -23,7 +23,8 @@ export default function TicketComponent({ show, setShow, id }: {
             title={'Confirm Ticket'}
             open={show}
             onClose={() => setShow(false)}
-            footer={null} // Removes the default modal buttons
+            footer={null}
+            onCancel={() => setShow(false)}
         >
             {currentTicket && (
                 <div className={'px-4 py-2'}>
@@ -59,7 +60,7 @@ export default function TicketComponent({ show, setShow, id }: {
                     </table>
 
                     <div className={'flex justify-between mt-4'}>
-                        <Button size={'large'} danger={true}>Cancel</Button>
+                        <Button size={'large'} onClick={() => setShow(false)} danger={true}>Cancel</Button>
                         <Button size={'large'} type={'primary'}>Confirm</Button>
                     </div>
 

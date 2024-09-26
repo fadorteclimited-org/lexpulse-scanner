@@ -30,7 +30,11 @@ export default function MainShell({ hasCameraAccess }: { hasCameraAccess: boolea
                 const videoDevices = devices.filter(device => device.kind === 'videoinput');
                 setAvailableCameras(videoDevices);
                 if (videoDevices.length > 0 && !cameraId) {
-                    setCameraId(videoDevices[0].deviceId);
+                    if (videoDevices.length > 1) {
+                        setCameraId(videoDevices[1].deviceId);
+                    } else {
+                        setCameraId(videoDevices[0].deviceId);
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching cameras: ", error);
