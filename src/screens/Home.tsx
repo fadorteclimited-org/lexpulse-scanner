@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 // @ts-expect-error
 import QrScanner from 'react-qr-scanner';
 import { Button } from "antd";
-import { MoreOutlined } from "@ant-design/icons";
 import TicketComponent from "../components/TicketComponent.tsx";
 
 export default function MainShell() {
