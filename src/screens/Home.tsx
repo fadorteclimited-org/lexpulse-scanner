@@ -6,7 +6,6 @@ import { Button } from "antd";
 import TicketComponent from "../components/TicketComponent.tsx";
 import {CameraOutlined} from "@ant-design/icons";
 import {useAppSelector} from "../hooks/hooks.ts";
-import {selectCurrentUser} from "../data/authSlice.ts";
 
 export default function MainShell({ hasCameraAccess }: { hasCameraAccess: boolean | null }) {
     const [data, setData] = useState<any>(null);
@@ -90,7 +89,10 @@ export default function MainShell({ hasCameraAccess }: { hasCameraAccess: boolea
                                 Switch Camera
                             </Button>
                         </div>
-                        <h3 className={'font-semibold'}>{event?.eventName} - {new Date(event?.eventDate || '').toDateString()}</h3>
+                        <div className={'flex justify-between'}><h3
+                            className={'font-semibold'}>{event?.eventName} - {new Date(event?.eventDate || '').toDateString()}</h3>
+                        <h3 className={'font-medium'}>{user?.name}</h3>
+                        </div>
                     </div>
 
                     {/* QR scanner should only run when the modal is closed */}
