@@ -63,9 +63,9 @@ export default function TicketComponent({ show, setShow,setData, id }: {
 
                     <div className="mt-2">
                         <span className={`inline-block px-2 py-1 rounded text-white ${
-                            (currentTicket.status.toLowerCase() === 'scanned' ? 'bg-red-500' : 'bg-green-500')
+                            (currentTicket.scanned ? 'bg-red-500' : 'bg-green-500')
                         }`}>
-                            {currentTicket.status.toLowerCase() === 'scanned' ? 'Scanned' : 'Not Scanned'}
+                            {currentTicket.scanned ? 'Scanned' : 'Not Scanned'}
                         </span>
                     </div>
 
@@ -83,12 +83,12 @@ export default function TicketComponent({ show, setShow,setData, id }: {
 
                     <div className={'flex justify-between mt-4'}>
                         <Button size={'large'} onClick={() => setShow(false)} danger={true}>Cancel</Button>
-                        <Button size={'large'} type={'primary'} disabled={currentTicket.status.toLowerCase() === 'scanned'} onClick={() => handleConfirm()}>Confirm</Button>
+                        <Button size={'large'} type={'primary'} disabled={currentTicket.scanned} onClick={() => handleConfirm()}>Confirm</Button>
                     </div>
 
                     {/* Status Indicator */}
                     <div className={'mt-4'}>
-                        {currentTicket.status.toLowerCase() === 'scanned' ? (
+                        {currentTicket.scanned ? (
                             <Text type="success">Status: Scanned</Text>
                         ) : (
                             <Text type="danger">Status: Not Scanned</Text>

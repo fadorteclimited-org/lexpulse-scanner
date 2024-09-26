@@ -208,6 +208,7 @@ export interface CombinedTicket {
     }[];
     totalPrice: number;
     status: string;
+    scanned: boolean;
     createdAt: string;
     amountPaid: number;
 }
