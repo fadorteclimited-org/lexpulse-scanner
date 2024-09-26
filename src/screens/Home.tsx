@@ -40,7 +40,7 @@ export default function MainShell() {
                 <QrScanner
                     delay={300}
                     style={previewStyle}
-
+                    facingMode={'environment'}
                     onError={handleError}
                     onScan={handleScan}
                 />
