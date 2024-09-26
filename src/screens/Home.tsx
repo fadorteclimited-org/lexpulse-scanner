@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 // @ts-expect-error
 import QrScanner from 'react-qr-scanner';
 import { Button } from "antd";
+import { MoreOutlined } from "@ant-design/icons";
 import TicketComponent from "../components/TicketComponent.tsx";
 
 export default function MainShell() {
@@ -25,18 +26,24 @@ export default function MainShell() {
         console.error('Error scanning QR:', err);
     };
 
-    // Get list of available cameras
+    // Request camera access and fetch the list of available cameras
     const getCameras = async () => {
         try {
+            // Request permission to use the camera
+            await navigator.mediaDevices.getUserMedia({ video: true });
+
+            // Enumerate available video input devices (cameras)
             const devices = await navigator.mediaDevices.enumerateDevices();
             const videoDevices = devices.filter(device => device.kind === 'videoinput');
-            console.log(videoDevices)
             setAvailableCameras(videoDevices);
+
+            // Set to the first available camera initially
             if (videoDevices.length > 0 && !cameraId) {
-                setCameraId(videoDevices[0].deviceId); // Set to the first available camera initially
+                setCameraId(videoDevices[0].deviceId);
             }
         } catch (error) {
-            console.error("Error fetching cameras: ", error);
+            console.error("Error accessing cameras: ", error);
+            alert("Please allow camera access to use the QR scanner.");
         }
     };
 
