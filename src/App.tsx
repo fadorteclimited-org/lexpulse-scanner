@@ -1,13 +1,18 @@
-import './App.css'
-import { Route, Routes } from "react-router-dom";
+import './App.css';
+import { Route, Routes, Navigate } from "react-router-dom";
 import MainShell from "./screens/Home.tsx";
+import Login from "./screens/Login.tsx";
+import Register from "./screens/Register.tsx"; // Assuming Register component is in this location
 import { ConfigProvider } from "antd";
 import { useEffect, useState } from "react";
 import { darkColors, primaryColor } from "../colors.ts";
+import { useSelector } from 'react-redux';
+import { RootState } from './store'; // Assuming the store is correctly set up
 
 function App() {
     const [isDarkMode] = useState<boolean>(false);
     const [hasCameraAccess, setHasCameraAccess] = useState<boolean | null>(null); // Store camera permission state
+    const token = useSelector((state: RootState) => state.auth.token); // Get the auth token from the Redux store
 
     const lightTheme = {
         token: {
@@ -45,29 +50,37 @@ function App() {
         },
     };
 
-    // Function to request camera access once
+    // Function to request camera access
     const requestCameraAccess = async () => {
         try {
             await navigator.mediaDevices.getUserMedia({ video: true });
-            setHasCameraAccess(true); // Camera access granted
+            setHasCameraAccess(true);
         } catch (error) {
-            setHasCameraAccess(false); // Camera access denied or failed
+            setHasCameraAccess(false);
         }
     };
 
-    // Request camera access on app load, but only once
+
     useEffect(() => {
-        requestCameraAccess();
-    }, []);
+        if (token) {
+            requestCameraAccess();
+        }
+    }, [token]);
 
     return (
         <ConfigProvider theme={isDarkMode ? darkTheme : lightTheme}>
             <Routes>
-                {/* Pass the camera access status to the MainShell component */}
-                <Route path={'/'} element={<MainShell hasCameraAccess={hasCameraAccess} />} />
+                <Route
+                    path="/"
+                    element={
+                        token ? <MainShell hasCameraAccess={hasCameraAccess} /> : <Navigate to="/login" />
+                    }
+                />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
             </Routes>
         </ConfigProvider>
-    )
+    );
 }
 
 export default App;

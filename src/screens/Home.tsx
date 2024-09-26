@@ -5,14 +5,16 @@ import QrScanner from 'react-qr-scanner';
 import { Button } from "antd";
 import TicketComponent from "../components/TicketComponent.tsx";
 import {CameraOutlined} from "@ant-design/icons";
+import {useAppSelector} from "../hooks/hooks.ts";
+import {selectCurrentUser} from "../data/authSlice.ts";
 
 export default function MainShell({ hasCameraAccess }: { hasCameraAccess: boolean | null }) {
     const [data, setData] = useState<any>(null);
-    const [show, setShow] = useState<boolean>(false); // Modal visibility
+    const [show, setShow] = useState<boolean>(false);
     const [cameraId, setCameraId] = useState<string | null>(null);
     const [availableCameras, setAvailableCameras] = useState<MediaDeviceInfo[]>([]);
     const [scanning, setScanning] = useState<boolean>(true); // Control if scanning should continue
-
+    const user = useAppSelector(selectCurrentUser);
     // Handle QR code scanning
     const handleScan = (result: any) => {
         if (result && !show && scanning) {
@@ -88,6 +90,7 @@ export default function MainShell({ hasCameraAccess }: { hasCameraAccess: boolea
                                 Switch Camera
                             </Button>
                         </div>
+                        <h3>{user?.eventId}</h3>
                     </div>
 
                     {/* QR scanner should only run when the modal is closed */}
@@ -112,6 +115,7 @@ export default function MainShell({ hasCameraAccess }: { hasCameraAccess: boolea
                         <TicketComponent
                             show={show}
                             setShow={setShow}
+                            setData={setData}
                             id={data.text}
                         />
                     )}

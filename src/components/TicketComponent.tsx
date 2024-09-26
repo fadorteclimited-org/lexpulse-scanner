@@ -1,21 +1,43 @@
-import { Button, Modal, Typography } from "antd";
+import {Button, message, Modal, Typography} from "antd";
 import { SetStateAction, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks.ts";
-import { fetchTicket } from "../data/ticketsSlice.ts";
+import {fetchTicket, scanTicket} from "../data/ticketsSlice.ts";
 
 const { Title, Text } = Typography;
 
-export default function TicketComponent({ show, setShow, id }: {
+export default function TicketComponent({ show, setShow,setData, id }: {
     show: boolean;
     setShow: (value: SetStateAction<boolean>) => void;
-    id: string;
+    setData: (value: SetStateAction<any>) => void;
+    id?: string;
 }) {
     const { currentTicket, loading } = useAppSelector(state => state.tickets);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(fetchTicket(id));
+       if (id){
+           dispatch(fetchTicket(id));
+       }
     }, [id]);
+
+    const handleConfirm = async () => {
+        try {
+           if (id){
+               const result = await dispatch(scanTicket(id))
+               if (result.meta.requestStatus === 'fulfilled'){
+                   message.success('Scan successful!');
+                   setShow(false);
+
+               } else {
+                   message.error(result.payload)
+           }
+               setData(undefined)
+            }
+        } catch (error) {
+            message.error('Error scanning ticket');
+            console.error(error);
+        }
+    }
 
     return (
         <Modal
@@ -41,9 +63,9 @@ export default function TicketComponent({ show, setShow, id }: {
 
                     <div className="mt-2">
                         <span className={`inline-block px-2 py-1 rounded text-white ${
-                            (currentTicket.status === 'scanned' ? 'bg-red-500' : 'bg-green-500')
+                            (currentTicket.status.toLowerCase() === 'scanned' ? 'bg-red-500' : 'bg-green-500')
                         }`}>
-                            {currentTicket.status === 'scanned' ? 'Scanned' : 'Not Scanned'}
+                            {currentTicket.status.toLowerCase() === 'scanned' ? 'Scanned' : 'Not Scanned'}
                         </span>
                     </div>
 
@@ -61,12 +83,12 @@ export default function TicketComponent({ show, setShow, id }: {
 
                     <div className={'flex justify-between mt-4'}>
                         <Button size={'large'} onClick={() => setShow(false)} danger={true}>Cancel</Button>
-                        <Button size={'large'} type={'primary'}>Confirm</Button>
+                        <Button size={'large'} type={'primary'} disabled={currentTicket.status.toLowerCase() === 'scanned'} onClick={() => handleConfirm()}>Confirm</Button>
                     </div>
 
                     {/* Status Indicator */}
                     <div className={'mt-4'}>
-                        {currentTicket.status === 'scanned' ? (
+                        {currentTicket.status.toLowerCase() === 'scanned' ? (
                             <Text type="success">Status: Scanned</Text>
                         ) : (
                             <Text type="danger">Status: Not Scanned</Text>
