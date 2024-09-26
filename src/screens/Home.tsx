@@ -14,7 +14,7 @@ export default function MainShell({ hasCameraAccess }: { hasCameraAccess: boolea
     const [cameraId, setCameraId] = useState<string | null>(null);
     const [availableCameras, setAvailableCameras] = useState<MediaDeviceInfo[]>([]);
     const [scanning, setScanning] = useState<boolean>(true); // Control if scanning should continue
-    const user = useAppSelector(selectCurrentUser);
+    const {user,event} = useAppSelector(state => state.auth);
     // Handle QR code scanning
     const handleScan = (result: any) => {
         if (result && !show && scanning) {
@@ -90,7 +90,7 @@ export default function MainShell({ hasCameraAccess }: { hasCameraAccess: boolea
                                 Switch Camera
                             </Button>
                         </div>
-                        <h3>{user?.eventId}</h3>
+                        <h3 className={'font-semibold'}>{event?.eventName} - {new Date(event?.eventDate || '').toDateString()}</h3>
                     </div>
 
                     {/* QR scanner should only run when the modal is closed */}

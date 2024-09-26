@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { common } from "./utils.ts";
-import { Scanner } from "./types.ts";
+import {EventModel, Scanner} from "./types.ts";
 import { RootState } from "../store.ts";
 import { redirect } from "react-router-dom";
 
@@ -11,6 +11,7 @@ export interface AuthState {
     token: string | null;
     loading: boolean;
     error: string | null;
+    event: EventModel | null;
 }
 
 const initialState: AuthState = {
@@ -18,6 +19,7 @@ const initialState: AuthState = {
     token: null,
     loading: false,
     error: null,
+    event: null
 };
 
 // Utility functions for managing cookies
@@ -80,9 +82,9 @@ export const loginScanner = createAsyncThunk(
             const res = await axios.post(`${common.baseUrl}/api/v1/scanners/login`, raw, config);
 
             if (res.status === 200) {
-                const { token, user } = res.data;
+                const { token, user, event } = res.data;
                 setAuthCookies(token, user); // Save token & user in cookies
-                return { success: true, token, user };
+                return { success: true, token, user, event };
             } else {
                 return rejectWithValue(res.data.msg);
             }
@@ -108,6 +110,7 @@ const authSlice = createSlice({
             state.token = null;
             state.loading = false;
             state.error = null;
+            state.event = null;
             redirect("/login");
         },
     },
@@ -145,6 +148,7 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.token = action.payload.token;
                 state.user = action.payload.user;
+                state.event = action.payload.event;
             })
             .addCase(loginScanner.rejected, (state, action) => {
                 state.loading = false;
