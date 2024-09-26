@@ -86,7 +86,7 @@ export default function MainShell({ hasCameraAccess }: { hasCameraAccess: boolea
                 </div>
             ) : (
                 <>
-                    <div className="absolute top-0 left-0 w-full bg-primary text-white py-4 px-4 z-10">
+                    <div className="absolute top-0 left-0 w-screen bg-primary text-white py-4 px-4 z-10">
                         <div className={'flex justify-between'}>
                             <h2 className={'text-lg font-semibold'}>LEXPULSE</h2>
                             <Button className={'text-white'} type={'text'} icon={<CameraOutlined/>} onClick={switchCamera}>
@@ -94,14 +94,14 @@ export default function MainShell({ hasCameraAccess }: { hasCameraAccess: boolea
                             </Button>
                         </div>
                         <div className={'flex justify-between'}><h3
-                            className={'font-semibold'}>{event?.eventName} - {new Date(event?.eventDate || '').toDateString()}</h3>
+                            className={'font-semibold text-sm'}>{event?.eventName} - {new Date(event?.eventDate || '').toDateString()}</h3>
                         <h3 className={'font-medium'}>{user?.name}</h3>
                         </div>
                     </div>
 
                     {/* QR scanner should only run when the modal is closed */}
                     {scanning && (
-                        <div className="absolute top-0 left-0 w-full h-full z-0">
+                        <div className="absolute top-0 left-0 w-screen h-full z-0">
                             {cameraId && (
                                 <QrScanner
                                     key={cameraId}
