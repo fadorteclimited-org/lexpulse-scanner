@@ -36,6 +36,8 @@ export default function TicketComponent({ show, setShow,setData, id }: {
         } catch (error) {
             message.error('Error scanning ticket');
             console.error(error);
+            setData(undefined)
+            setShow(false);
         }
     }
 
