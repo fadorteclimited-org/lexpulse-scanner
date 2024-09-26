@@ -61,13 +61,13 @@ export const scanTicket = createAsyncThunk('tickets/scanTicket', async (id: stri
 
         const scannedTicket = response.data.data;
 
-        // Return the scanned ticket
         return scannedTicket;
     } catch (error) {
         console.error(error);
         if (error instanceof AxiosError) {
-            return rejectWithValue(error.message);
+            return rejectWithValue(error.response?.data.error || 'Error scanning ticket');
         }
+        return rejectWithValue('An unknown error occurred');
     }
 });
 
