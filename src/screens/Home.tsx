@@ -1,6 +1,5 @@
 import { useState } from 'react';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
+
 import QrScanner from 'react-qr-scanner';
 import {Button} from "antd";
 import {MoreOutlined} from "@ant-design/icons";
@@ -40,7 +39,7 @@ export default function MainShell() {
                 <QrScanner
                     delay={300}
                     style={previewStyle}
-                    facingMode={'environment'}
+                    facingMode={'rear'}
                     onError={handleError}
                     onScan={handleScan}
                 />
